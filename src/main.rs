@@ -28,7 +28,10 @@ fn fahrenheit_to_celsius(){
     println!("\n------------------------");
     println!("Enter the number to convert to Celsius");
     
-    let value_to_convert: f64 = get_user_input();
+    let value_to_convert = match get_user_input() {
+        Some(num) => num,
+        None => return,
+    };
 
     //Formula para convertirlo (X °F − 32) × 5 / 9
 
@@ -41,7 +44,10 @@ fn celsius_to_fahrenheit(){
     println!("\n------------------------");
     println!("Enter the number to convert to Fahrenheit");
 
-    let value_to_convert: f64 = get_user_input();
+    let value_to_convert = match get_user_input() {
+        Some(num) => num,
+        None => return,
+    };
 
     //Formula para convertirlo (X °C × 9 / 5) + 32
 
@@ -49,17 +55,16 @@ fn celsius_to_fahrenheit(){
     println!("Result is {value_to_convert}C is {converted_value}F");
 }
 
-fn get_user_input() -> f64{
+fn get_user_input() -> Option<f64>{
 
-    let mut value_to_convert: String = String::new();
+    let mut value_to_convert = String::new();
+    io::stdin().read_line(&mut value_to_convert).expect("Can't get the number");
 
-    io::stdin().read_line(&mut value_to_convert).expect("Cant get the number");
-
-    let value_to_convert: f64 = match value_to_convert.trim().parse::<f64>() {
-        Ok(num) => num,
-        Err(_) => {println!("Invalid number entered"); return HELP}
-    };
-
-    return value_to_convert
-
+    match value_to_convert.trim().parse::<f64>() {
+        Ok(num) => Some(num),
+        Err(_) => {
+            println!("Invalid number entered");
+            None
+        }
+    }
 }
